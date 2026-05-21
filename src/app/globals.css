@@ -1,0 +1,361 @@
+@import "tailwindcss";
+
+/* ====================================
+   COMPRO Y VENDO CRP — Design System
+   Estética Premium: Negro + Dorado + Blanco Perla
+   ==================================== */
+
+@theme inline {
+  /* --- Colores principales --- */
+  --color-negro: #0A0A0A;
+  --color-negro-2: #111111;
+  --color-negro-3: #1A1A1A;
+  --color-negro-4: #222222;
+  --color-dorado: #C9A961;
+  --color-dorado-claro: #D4BF8A;
+  --color-dorado-oscuro: #A88B3D;
+  --color-dorado-bg: rgba(201, 169, 97, 0.08);
+  --color-dorado-bg-hover: rgba(201, 169, 97, 0.15);
+  --color-blanco: #FAFAF7;
+  --color-blanco-perla: #F5F5F0;
+  --color-gris: #888888;
+  --color-gris-claro: #AAAAAA;
+  --color-gris-oscuro: #444444;
+  --color-borde: rgba(255, 255, 255, 0.06);
+  --color-borde-hover: rgba(201, 169, 97, 0.3);
+
+  /* --- Colores de estado --- */
+  --color-disponible: #22C55E;
+  --color-reservado: #F59E0B;
+  --color-vendido: #EF4444;
+
+  /* --- Tipografía --- */
+  --font-heading: "Montserrat", sans-serif;
+  --font-body: "Inter", sans-serif;
+
+  /* --- Sombras --- */
+  --shadow-card: 0 4px 24px rgba(0, 0, 0, 0.3);
+  --shadow-card-hover: 0 8px 40px rgba(0, 0, 0, 0.5);
+  --shadow-dorado: 0 4px 20px rgba(201, 169, 97, 0.2);
+  --shadow-boton: 0 2px 12px rgba(201, 169, 97, 0.3);
+
+  /* --- Radios --- */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+
+  /* --- Transiciones --- */
+  --transition-fast: 200ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-base: 300ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-slow: 500ms cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* --- Tailwind overrides --- */
+  --color-background: var(--color-negro);
+  --color-foreground: var(--color-blanco);
+  --font-sans: var(--font-body);
+}
+
+/* ====================================
+   Base
+   ==================================== */
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--color-negro);
+  color: var(--color-blanco);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+::selection {
+  background: rgba(201, 169, 97, 0.3);
+  color: var(--color-blanco);
+}
+
+/* ====================================
+   Tipografía premium
+   ==================================== */
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+}
+
+/* Gradiente dorado para textos especiales */
+.text-gradient {
+  background: linear-gradient(135deg, var(--color-dorado), var(--color-dorado-claro), var(--color-dorado));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ====================================
+   Componentes reutilizables
+   ==================================== */
+
+/* Botón primario (dorado) */
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 14px 32px;
+  background: linear-gradient(135deg, var(--color-dorado), var(--color-dorado-oscuro));
+  color: var(--color-negro);
+  font-family: var(--font-heading);
+  font-weight: 600;
+  font-size: 0.9rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  border: none;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all var(--transition-base);
+  box-shadow: var(--shadow-boton);
+  text-decoration: none;
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-dorado);
+  filter: brightness(1.1);
+}
+
+.btn-primary:active {
+  transform: translateY(0);
+}
+
+/* Botón secundario (outline) */
+.btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 14px 32px;
+  background: transparent;
+  color: var(--color-dorado);
+  font-family: var(--font-heading);
+  font-weight: 600;
+  font-size: 0.9rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  border: 1.5px solid var(--color-dorado);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all var(--transition-base);
+  text-decoration: none;
+}
+
+.btn-secondary:hover {
+  background: var(--color-dorado-bg);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(201, 169, 97, 0.15);
+}
+
+/* ====================================
+   Tarjeta de vehículo
+   ==================================== */
+
+.vehicle-card {
+  position: relative;
+  background: var(--color-negro-2);
+  border: 1px solid var(--color-borde);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  transition: all var(--transition-base);
+}
+
+.vehicle-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--color-borde-hover);
+  box-shadow: var(--shadow-card-hover);
+}
+
+.vehicle-card-image {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16/10;
+  overflow: hidden;
+}
+
+.vehicle-card-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform var(--transition-slow);
+}
+
+.vehicle-card:hover .vehicle-card-image img {
+  transform: scale(1.05);
+}
+
+/* Badge de estado */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 12px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  border-radius: 999px;
+}
+
+.badge-disponible {
+  background: rgba(34, 197, 94, 0.15);
+  color: var(--color-disponible);
+}
+
+.badge-reservado {
+  background: rgba(245, 158, 11, 0.15);
+  color: var(--color-reservado);
+}
+
+.badge-vendido {
+  background: rgba(239, 68, 68, 0.15);
+  color: var(--color-vendido);
+}
+
+/* ====================================
+   Sección con separador dorado
+   ==================================== */
+
+.section-tag {
+  display: inline-block;
+  padding: 6px 16px;
+  background: var(--color-dorado-bg);
+  color: var(--color-dorado);
+  font-family: var(--font-heading);
+  font-weight: 600;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  border-radius: 999px;
+  border: 1px solid rgba(201, 169, 97, 0.2);
+}
+
+/* ====================================
+   Scrollbar personalizado
+   ==================================== */
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-negro);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-gris-oscuro);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-dorado-oscuro);
+}
+
+/* ====================================
+   Animaciones
+   ==================================== */
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.6s ease-out forwards;
+}
+
+/* Skeleton loader */
+.skeleton {
+  background: linear-gradient(90deg, var(--color-negro-3) 25%, var(--color-negro-4) 50%, var(--color-negro-3) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: var(--radius-md);
+}
+
+/* ====================================
+   Filtros (catálogo)
+   ==================================== */
+
+.filter-select {
+  appearance: none;
+  background: var(--color-negro-3);
+  border: 1px solid var(--color-borde);
+  color: var(--color-blanco);
+  padding: 10px 36px 10px 14px;
+  border-radius: var(--radius-md);
+  font-size: 0.875rem;
+  font-family: var(--font-body);
+  cursor: pointer;
+  transition: border-color var(--transition-fast);
+  background-image: url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L5 5L9 1' stroke='%23888888' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+}
+
+.filter-select:hover,
+.filter-select:focus {
+  border-color: var(--color-dorado);
+  outline: none;
+}
+
+.filter-input {
+  background: var(--color-negro-3);
+  border: 1px solid var(--color-borde);
+  color: var(--color-blanco);
+  padding: 10px 14px;
+  border-radius: var(--radius-md);
+  font-size: 0.875rem;
+  font-family: var(--font-body);
+  transition: border-color var(--transition-fast);
+  width: 100%;
+}
+
+.filter-input:hover,
+.filter-input:focus {
+  border-color: var(--color-dorado);
+  outline: none;
+}
+
+.filter-input::placeholder {
+  color: var(--color-gris);
+}
+
+/* ====================================
+   Glassmorphism panels
+   ==================================== */
+
+.glass {
+  background: rgba(17, 17, 17, 0.7);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--color-borde);
+}
