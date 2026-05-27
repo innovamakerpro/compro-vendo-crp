@@ -1,7 +1,7 @@
 "use server";
 
 import { createClient } from "@/lib/supabase/server";
-import { getAdminClient } from "@/lib/supabase/admin";
+import { createAdminClient } from "@/lib/supabase/admin";
 import { redirect } from "next/navigation";
 
 interface LoginState {
@@ -33,7 +33,7 @@ export async function loginAction(
   }
 
   // Usar admin client (bypasa RLS) para consultar el rol
-  const adminClient = getAdminClient();
+  const adminClient = createAdminClient();
   const { data: profile } = await adminClient
     .from("profiles")
     .select("rol")
