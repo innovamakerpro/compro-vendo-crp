@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
-import { createAdminClient } from "@/lib/supabase/admin";
 import { redirect } from "next/navigation";
 import LogoutButton from "./LogoutButton";
 
@@ -12,9 +11,8 @@ export default async function AdminLayout({ children }: { children: React.ReactN
     redirect("/auth/login");
   }
 
-  // Verificar que el usuario sea admin (usando admin client para saltar RLS)
-  const adminClient = createAdminClient();
-  const { data: profile } = await adminClient
+  // Verificar que el usuario sea admin (el usuario puede leer su propio perfil por RLS)
+  const { data: profile } = await supabase
     .from("profiles")
     .select("rol")
     .eq("id", user.id)

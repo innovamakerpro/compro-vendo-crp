@@ -1,7 +1,6 @@
 "use server";
 
 import { createClient } from "@/lib/supabase/server";
-import { createAdminClient } from "@/lib/supabase/admin";
 import { redirect } from "next/navigation";
 
 interface LoginState {
@@ -27,25 +26,17 @@ export async function loginAction(
     return { error: "Email o contraseña incorrectos. Verifica tus datos." };
   }
 
-  // SIEMPRE consultar el rol primero (usando admin client para saltar RLS)
-  let rol = "cliente";
-  try {
-    const adminClient = createAdminClient();
-    const { data: profile, error: profileError } = await adminClient
-      .from("profiles")
-      .select("rol")
-      .eq("id", data.user.id)
-      .single();
+  // Consultar el rol del usuario usando el MISMO cliente (ya autenticado)
+  // La política RLS "profiles_select" permite: auth.uid() = id
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("rol")
+    .eq("id", data.user.id)
+    .single();
 
-    if (profile && !profileError) {
-      rol = profile.rol;
-    }
-  } catch (e) {
-    // Si falla la consulta, asumir cliente
-    console.error("Error consultando perfil:", e);
-  }
+  const rol = profile?.rol ?? "cliente";
 
-  // Admin SIEMPRE va a /admin, sin excepciones
+  // Admin SIEMPRE va a /admin
   if (rol === "admin") {
     redirect("/admin");
   }
