@@ -132,6 +132,8 @@ export interface Database {
           nombre: string | null
           apellidos: string | null
           telefono: string | null
+          tipo_documento: string | null
+          numero_documento: string | null
           rol: 'cliente' | 'admin'
           bloqueado: boolean
           created_at: string
@@ -143,6 +145,8 @@ export interface Database {
           nombre?: string | null
           apellidos?: string | null
           telefono?: string | null
+          tipo_documento?: string | null
+          numero_documento?: string | null
           rol?: 'cliente' | 'admin'
           bloqueado?: boolean
         }
@@ -152,6 +156,8 @@ export interface Database {
           nombre?: string | null
           apellidos?: string | null
           telefono?: string | null
+          tipo_documento?: string | null
+          numero_documento?: string | null
           rol?: 'cliente' | 'admin'
           bloqueado?: boolean
         }

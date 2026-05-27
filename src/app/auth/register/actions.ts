@@ -12,16 +12,18 @@ export async function registerAction(
   _prev: RegisterState | null,
   formData: FormData
 ): Promise<RegisterState> {
-  const nombre    = (formData.get("nombre") as string)?.trim();
-  const apellidos = (formData.get("apellidos") as string)?.trim();
-  const telefono  = (formData.get("telefono") as string)?.trim();
-  const email     = (formData.get("email") as string)?.trim();
-  const password  = formData.get("password") as string;
-  const confirm   = formData.get("confirm") as string;
-  const privacy   = formData.get("privacy");
+  const nombre           = (formData.get("nombre") as string)?.trim();
+  const apellidos        = (formData.get("apellidos") as string)?.trim();
+  const telefono         = (formData.get("telefono") as string)?.trim();
+  const tipo_documento   = (formData.get("tipo_documento") as string)?.trim();
+  const numero_documento = (formData.get("numero_documento") as string)?.trim();
+  const email            = (formData.get("email") as string)?.trim();
+  const password         = formData.get("password") as string;
+  const confirm          = formData.get("confirm") as string;
+  const privacy          = formData.get("privacy");
 
   // ── Validaciones ──
-  if (!nombre || !apellidos || !email || !password || !confirm) {
+  if (!nombre || !apellidos || !tipo_documento || !numero_documento || !email || !password || !confirm) {
     return { error: "Todos los campos obligatorios deben estar rellenos." };
   }
 
@@ -48,6 +50,8 @@ export async function registerAction(
         nombre,
         apellidos,
         telefono: telefono || null,
+        tipo_documento,
+        numero_documento,
       },
     },
   });
@@ -73,6 +77,8 @@ export async function registerAction(
       nombre,
       apellidos,
       telefono: telefono || null,
+      tipo_documento,
+      numero_documento,
       rol: "cliente",
     });
 

@@ -89,6 +89,20 @@ export default function LoginForm({ redirectTo }: Props) {
             </div>
           </div>
 
+          {/* Recordar sesión */}
+          <div className="flex items-center gap-3">
+            <input
+              id="login-remember"
+              name="remember"
+              type="checkbox"
+              className="w-4 h-4 rounded accent-[var(--color-dorado)] cursor-pointer shrink-0"
+              disabled={isPending}
+            />
+            <label htmlFor="login-remember" className="text-xs text-[var(--color-gris)] cursor-pointer leading-relaxed">
+              Recordar mi sesión
+            </label>
+          </div>
+
           {/* Error */}
           {state?.error && (
             <div className="flex items-center gap-2 text-sm text-red-400 bg-red-500/10 border border-red-500/20 rounded-lg px-4 py-3">

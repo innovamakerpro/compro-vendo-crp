@@ -107,6 +107,41 @@ export default function RegisterForm() {
             </div>
           </div>
 
+          {/* Tipo documento + Nº documento */}
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <label htmlFor="reg-tipo-documento" className="block text-xs font-medium text-[var(--color-gris-claro)] uppercase tracking-wider mb-1.5">
+                Tipo documento <span className="text-red-400">*</span>
+              </label>
+              <select
+                id="reg-tipo-documento"
+                name="tipo_documento"
+                required
+                className="filter-input w-full h-11"
+                disabled={isPending}
+              >
+                <option value="">Seleccionar...</option>
+                <option value="DNI">DNI</option>
+                <option value="NIE">NIE</option>
+                <option value="Pasaporte">Pasaporte</option>
+              </select>
+            </div>
+            <div>
+              <label htmlFor="reg-numero-documento" className="block text-xs font-medium text-[var(--color-gris-claro)] uppercase tracking-wider mb-1.5">
+                Nº documento <span className="text-red-400">*</span>
+              </label>
+              <input
+                id="reg-numero-documento"
+                name="numero_documento"
+                type="text"
+                required
+                placeholder="Ej: 12345678A"
+                className="filter-input w-full h-11"
+                disabled={isPending}
+              />
+            </div>
+          </div>
+
           {/* Email */}
           <div>
             <label htmlFor="reg-email" className="block text-xs font-medium text-[var(--color-gris-claro)] uppercase tracking-wider mb-1.5">
