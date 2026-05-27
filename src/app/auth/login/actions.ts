@@ -1,7 +1,6 @@
 "use server";
 
 import { createClient } from "@/lib/supabase/server";
-import { createClient as createBrowserClient } from "@supabase/supabase-js";
 import { redirect } from "next/navigation";
 
 interface LoginState {
@@ -20,36 +19,15 @@ export async function loginAction(
     return { error: "Introduce el email y la contraseña." };
   }
 
-  // 1. Login con el server client (establece cookies para futuras requests)
   const supabase = await createClient();
   const { data, error } = await supabase.auth.signInWithPassword({ email, password });
 
-  if (error || !data.session) {
+  if (error || !data.user) {
     return { error: "Email o contraseña incorrectos. Verifica tus datos." };
   }
 
-  // 2. Crear un cliente temporal con el access_token recién obtenido
-  //    para hacer queries RLS en esta misma request
-  const authClient = createBrowserClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    {
-      global: {
-        headers: {
-          Authorization: `Bearer ${data.session.access_token}`,
-        },
-      },
-    }
-  );
-
-  // 3. Consultar el rol con el token autenticado
-  const { data: profile } = await authClient
-    .from("profiles")
-    .select("rol")
-    .eq("id", data.user.id)
-    .single();
-
-  const rol = profile?.rol ?? "cliente";
+  // Leer el rol directamente del JWT (app_metadata) — no necesita query a profiles
+  const rol = data.user.app_metadata?.role ?? "cliente";
 
   // Admin SIEMPRE va a /admin
   if (rol === "admin") {

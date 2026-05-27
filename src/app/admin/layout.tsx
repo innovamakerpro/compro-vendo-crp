@@ -11,14 +11,9 @@ export default async function AdminLayout({ children }: { children: React.ReactN
     redirect("/auth/login");
   }
 
-  // Verificar que el usuario sea admin (el usuario puede leer su propio perfil por RLS)
-  const { data: profile } = await supabase
-    .from("profiles")
-    .select("rol")
-    .eq("id", user.id)
-    .single();
-
-  if (profile?.rol !== "admin") {
+  // Verificar que el usuario sea admin (desde app_metadata del JWT)
+  const rol = user.app_metadata?.role ?? "cliente";
+  if (rol !== "admin") {
     redirect("/");
   }
 
