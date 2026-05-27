@@ -94,6 +94,16 @@ export default function Navbar() {
             </svg>
             {CONTACTO.telefono}
           </a>
+          <Link
+            href="/auth/login"
+            className="flex items-center gap-2 text-sm text-[var(--color-gris-claro)] hover:text-[var(--color-dorado)] transition-colors"
+            id="navbar-login"
+          >
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" /><circle cx="12" cy="7" r="4" />
+            </svg>
+            Iniciar sesión
+          </Link>
           <Link href="/catalogo" className="btn-primary text-xs py-2.5 px-5" id="navbar-cta">
             Ver coches
           </Link>
@@ -158,6 +168,12 @@ export default function Navbar() {
                 <a href={CONTACTO.telefonoLink} className="btn-secondary">
                   Llamar: {CONTACTO.telefono}
                 </a>
+                <Link href="/auth/login" onClick={() => setMobileOpen(false)} className="btn-secondary flex items-center gap-2">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" /><circle cx="12" cy="7" r="4" />
+                  </svg>
+                  Iniciar sesión
+                </Link>
                 <Link href="/catalogo" onClick={() => setMobileOpen(false)} className="btn-primary">
                   Ver todos los coches
                 </Link>
