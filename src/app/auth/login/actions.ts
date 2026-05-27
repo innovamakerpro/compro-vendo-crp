@@ -1,6 +1,7 @@
 "use server";
 
 import { createClient } from "@/lib/supabase/server";
+import { getAdminClient } from "@/lib/supabase/admin";
 import { redirect } from "next/navigation";
 
 interface LoginState {
@@ -31,8 +32,9 @@ export async function loginAction(
     redirect(redirectTo);
   }
 
-  // Si no, redirigir según el rol del usuario
-  const { data: profile } = await supabase
+  // Usar admin client (bypasa RLS) para consultar el rol
+  const adminClient = getAdminClient();
+  const { data: profile } = await adminClient
     .from("profiles")
     .select("rol")
     .eq("id", data.user.id)
@@ -42,3 +44,4 @@ export async function loginAction(
   const destino = rol === "admin" ? "/admin" : "/cliente";
   redirect(destino);
 }
+
