@@ -27,21 +27,33 @@ export async function loginAction(
     return { error: "Email o contraseña incorrectos. Verifica tus datos." };
   }
 
-  // Si viene un redirect explícito (ej: /cliente/favoritos), usarlo directamente
-  if (redirectTo && redirectTo.startsWith("/") && redirectTo !== "/admin") {
+  // SIEMPRE consultar el rol primero (usando admin client para saltar RLS)
+  let rol = "cliente";
+  try {
+    const adminClient = createAdminClient();
+    const { data: profile, error: profileError } = await adminClient
+      .from("profiles")
+      .select("rol")
+      .eq("id", data.user.id)
+      .single();
+
+    if (profile && !profileError) {
+      rol = profile.rol;
+    }
+  } catch (e) {
+    // Si falla la consulta, asumir cliente
+    console.error("Error consultando perfil:", e);
+  }
+
+  // Admin SIEMPRE va a /admin, sin excepciones
+  if (rol === "admin") {
+    redirect("/admin");
+  }
+
+  // Para clientes: usar redirectTo si existe, si no ir a /cliente
+  if (redirectTo && redirectTo.startsWith("/")) {
     redirect(redirectTo);
   }
 
-  // Usar admin client (bypasa RLS) para consultar el rol
-  const adminClient = createAdminClient();
-  const { data: profile } = await adminClient
-    .from("profiles")
-    .select("rol")
-    .eq("id", data.user.id)
-    .single();
-
-  const rol = profile?.rol ?? "cliente";
-  const destino = rol === "admin" ? "/admin" : "/cliente";
-  redirect(destino);
+  redirect("/cliente");
 }
-
