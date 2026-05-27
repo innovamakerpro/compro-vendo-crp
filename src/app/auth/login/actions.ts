@@ -1,6 +1,7 @@
 "use server";
 
 import { createClient } from "@/lib/supabase/server";
+import { createClient as createBrowserClient } from "@supabase/supabase-js";
 import { redirect } from "next/navigation";
 
 interface LoginState {
@@ -19,16 +20,30 @@ export async function loginAction(
     return { error: "Introduce el email y la contraseña." };
   }
 
+  // 1. Login con el server client (establece cookies para futuras requests)
   const supabase = await createClient();
   const { data, error } = await supabase.auth.signInWithPassword({ email, password });
 
-  if (error) {
+  if (error || !data.session) {
     return { error: "Email o contraseña incorrectos. Verifica tus datos." };
   }
 
-  // Consultar el rol del usuario usando el MISMO cliente (ya autenticado)
-  // La política RLS "profiles_select" permite: auth.uid() = id
-  const { data: profile } = await supabase
+  // 2. Crear un cliente temporal con el access_token recién obtenido
+  //    para hacer queries RLS en esta misma request
+  const authClient = createBrowserClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    {
+      global: {
+        headers: {
+          Authorization: `Bearer ${data.session.access_token}`,
+        },
+      },
+    }
+  );
+
+  // 3. Consultar el rol con el token autenticado
+  const { data: profile } = await authClient
     .from("profiles")
     .select("rol")
     .eq("id", data.user.id)
