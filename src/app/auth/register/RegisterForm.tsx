@@ -66,7 +66,7 @@ export default function RegisterForm() {
                 name="nombre"
                 type="text"
                 required
-                placeholder="Juan"
+                placeholder=""
                 className="filter-input w-full h-11"
                 disabled={isPending}
               />
@@ -80,7 +80,7 @@ export default function RegisterForm() {
                 name="apellidos"
                 type="text"
                 required
-                placeholder="García López"
+                placeholder=""
                 className="filter-input w-full h-11"
                 disabled={isPending}
               />
@@ -100,7 +100,7 @@ export default function RegisterForm() {
                 id="reg-telefono"
                 name="telefono"
                 type="tel"
-                placeholder="633 391 102"
+                placeholder=""
                 className="filter-input pl-11 w-full h-11"
                 disabled={isPending}
               />
@@ -135,7 +135,7 @@ export default function RegisterForm() {
                 name="numero_documento"
                 type="text"
                 required
-                placeholder="Ej: 12345678A"
+                placeholder=""
                 className="filter-input w-full h-11"
                 disabled={isPending}
               />
@@ -157,7 +157,7 @@ export default function RegisterForm() {
                 type="email"
                 autoComplete="email"
                 required
-                placeholder="tu@email.com"
+                placeholder=""
                 className="filter-input pl-11 w-full h-11"
                 disabled={isPending}
               />
@@ -180,7 +180,7 @@ export default function RegisterForm() {
                 autoComplete="new-password"
                 required
                 minLength={6}
-                placeholder="Mínimo 6 caracteres"
+                placeholder=""
                 className="filter-input pl-11 w-full h-11"
                 disabled={isPending}
               />
@@ -203,7 +203,7 @@ export default function RegisterForm() {
                 autoComplete="new-password"
                 required
                 minLength={6}
-                placeholder="Repite la contraseña"
+                placeholder=""
                 className="filter-input pl-11 w-full h-11"
                 disabled={isPending}
               />

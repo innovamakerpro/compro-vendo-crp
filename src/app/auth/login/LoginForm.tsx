@@ -52,7 +52,7 @@ export default function LoginForm({ redirectTo }: Props) {
                 type="email"
                 autoComplete="email"
                 required
-                placeholder="tu@email.com"
+                placeholder=""
                 className="filter-input pl-11 w-full h-12"
                 disabled={isPending}
               />
@@ -82,7 +82,7 @@ export default function LoginForm({ redirectTo }: Props) {
                 type="password"
                 autoComplete="current-password"
                 required
-                placeholder="••••••••••••"
+                placeholder=""
                 className="filter-input pl-11 w-full h-12"
                 disabled={isPending}
               />
