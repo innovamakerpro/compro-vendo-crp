@@ -6,6 +6,7 @@ import { redirect } from "next/navigation";
 
 export interface FormState {
   error?: string;
+  success?: boolean;
 }
 
 export async function crearVehiculo(
@@ -43,6 +44,21 @@ export async function crearVehiculo(
   if (kilometraje < 0) return { error: "El kilometraje no puede ser negativo." };
   if (!anio || anio < 1900 || anio > 2100) return { error: "Introduce un año válido." };
 
+  // Validar imágenes ANTES de insertar nada
+  const imageFiles = formData.getAll("imagenes") as File[];
+  const validImages = imageFiles.filter((f) => f.size > 0);
+
+  // Vercel serverless tiene un límite de ~4.5 MB en el body.
+  // Comprobar el tamaño total de las imágenes para dar un error claro.
+  const totalSize = validImages.reduce((sum, f) => sum + f.size, 0);
+  const MAX_TOTAL = 4 * 1024 * 1024; // 4 MB de margen seguro
+  if (totalSize > MAX_TOTAL) {
+    return {
+      error: `Las imágenes pesan ${(totalSize / 1024 / 1024).toFixed(1)} MB en total. El máximo es 4 MB. Reduce el tamaño o sube menos imágenes a la vez.`,
+    };
+  }
+
+  // Insertar vehículo
   const { data: vehicle, error: insertError } = await supabase
     .from("vehicles")
     .insert({
@@ -65,8 +81,7 @@ export async function crearVehiculo(
   }
 
   // Subir imágenes al bucket de Storage
-  const imageFiles = formData.getAll("imagenes") as File[];
-  const validImages = imageFiles.filter((f) => f.size > 0);
+  const erroresImagen: string[] = [];
 
   for (let i = 0; i < validImages.length; i++) {
     const file = validImages[i];
@@ -78,7 +93,10 @@ export async function crearVehiculo(
       .from("vehicle-images")
       .upload(path, buffer, { contentType: file.type });
 
-    if (upErr) continue;
+    if (upErr) {
+      erroresImagen.push(`Imagen ${i + 1}: ${upErr.message}`);
+      continue;
+    }
 
     const { data: { publicUrl } } = supabase.storage
       .from("vehicle-images")
@@ -92,8 +110,11 @@ export async function crearVehiculo(
     });
   }
 
+  // Revalidar las rutas relevantes
   revalidatePath("/admin/vehiculos");
   revalidatePath("/catalogo");
   revalidatePath("/");
+
+  // Redirigir al listado de vehículos
   redirect("/admin/vehiculos");
 }

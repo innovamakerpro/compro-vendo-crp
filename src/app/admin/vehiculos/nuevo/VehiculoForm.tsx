@@ -11,11 +11,17 @@ const SECTION = "bg-[var(--color-negro-2)] border border-[var(--color-borde)] ro
 export default function VehiculoForm() {
   const [state, action, isPending] = useActionState(crearVehiculo, null);
   const [previews, setPreviews] = useState<string[]>([]);
+  const [totalSize, setTotalSize] = useState(0);
+  const MAX_TOTAL_MB = 4;
 
   function handleImages(e: React.ChangeEvent<HTMLInputElement>) {
     const files = Array.from(e.target.files ?? []);
     setPreviews(files.map((f) => URL.createObjectURL(f)));
+    setTotalSize(files.reduce((sum, f) => sum + f.size, 0));
   }
+
+  const totalSizeMB = totalSize / 1024 / 1024;
+  const sizeExceeded = totalSizeMB > MAX_TOTAL_MB;
 
   return (
     <form action={action} className="max-w-4xl">
@@ -173,7 +179,7 @@ export default function VehiculoForm() {
             <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><polyline points="17 8 12 3 7 8" /><line x1="12" y1="3" x2="12" y2="15" />
           </svg>
           <span className="text-sm text-[var(--color-gris)]">Haz clic o arrastra imágenes aquí</span>
-          <span className="text-xs text-[var(--color-gris-oscuro)] mt-1">JPG, PNG, WebP — máx. 5 MB por imagen</span>
+          <span className="text-xs text-[var(--color-gris-oscuro)] mt-1">JPG, PNG, WebP — máx. 4 MB en total</span>
           <input
             name="imagenes"
             type="file"
@@ -185,19 +191,29 @@ export default function VehiculoForm() {
         </label>
 
         {previews.length > 0 && (
-          <div className="grid grid-cols-4 gap-3 mt-4">
-            {previews.map((src, i) => (
-              <div key={i} className="relative aspect-[4/3] rounded-lg overflow-hidden bg-[var(--color-negro-3)]">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={src} alt="" className="w-full h-full object-cover" />
-                {i === 0 && (
-                  <span className="absolute bottom-1 left-1 text-[10px] bg-[var(--color-dorado)] text-black font-bold px-1.5 py-0.5 rounded">
-                    Principal
-                  </span>
-                )}
-              </div>
-            ))}
-          </div>
+          <>
+            <div className="grid grid-cols-4 gap-3 mt-4">
+              {previews.map((src, i) => (
+                <div key={i} className="relative aspect-[4/3] rounded-lg overflow-hidden bg-[var(--color-negro-3)]">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={src} alt="" className="w-full h-full object-cover" />
+                  {i === 0 && (
+                    <span className="absolute bottom-1 left-1 text-[10px] bg-[var(--color-dorado)] text-black font-bold px-1.5 py-0.5 rounded">
+                      Principal
+                    </span>
+                  )}
+                </div>
+              ))}
+            </div>
+            <div className={`mt-3 text-xs flex items-center gap-2 ${sizeExceeded ? 'text-red-400' : 'text-[var(--color-gris)]'}`}>
+              <span>{previews.length} imagen{previews.length !== 1 ? 'es' : ''} — {totalSizeMB.toFixed(1)} MB de {MAX_TOTAL_MB} MB</span>
+              {sizeExceeded && (
+                <span className="bg-red-500/10 border border-red-500/20 rounded px-2 py-0.5 font-medium">
+                  ⚠ Reduce el tamaño o número de imágenes
+                </span>
+              )}
+            </div>
+          </>
         )}
       </div>
 
@@ -205,7 +221,7 @@ export default function VehiculoForm() {
       <div className="flex items-center gap-4">
         <button
           type="submit"
-          disabled={isPending}
+          disabled={isPending || sizeExceeded}
           className="btn-primary px-8 py-3 disabled:opacity-60 disabled:cursor-not-allowed"
         >
           {isPending ? (
